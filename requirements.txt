@@ -1,0 +1,23 @@
+# Install Heflp (-e means editable)
+-e ./heflp
+
+# The requirements below are optional.
+# They are required by the examples included
+# in this project (/src and /test), not required by Heflp.
+
+# Training frameworks supported by Heflp now
+# Please install at least one of them
+# torch
+# tensorflow
+
+# Optional requirements for examples in /test
+matplotlib
+ipykernel
+nbformat
+
+# Optional requirements for examples in /src
+scikit-learn >= 1.3.0
+pandas
+torchvision
+# keras-preprocessing
+# plotly
