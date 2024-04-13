@@ -1,6 +1,3 @@
-# thesis-2023-zekun
-Repository for Zekun Wang's MSc thesis
-
 ## Introduction
 
 Project name: **HEFLP (Homomorphic Encryption Federated Learning (FLower) Plugin)**
