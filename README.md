@@ -2,7 +2,7 @@
 
 Project name: **HEFLP (Homomorphic Encryption Federated Learning (FLower) Plugin)**
 
-Heflp implements the idea of encrypting the model parameters before uploading and doing the homomorphic aggregation inside the TEE on the server. The aggregated model parameters can be obtained using the same cipher to decrypt the received message on each client. Heflp is based on the [Flower FL framework](https://flower.dev/docs/framework/index.html).
+Heflp implements the idea of encrypting the model parameters before uploading and doing the homomorphic aggregation on the server. The aggregated model parameters can be obtained using the same cipher to decrypt the received message on each client. Heflp is based on the [Flower FL framework](https://flower.dev/docs/framework/index.html).
 
 Heflp now supports 4 HE schemes:
 1. [Flashe](https://arxiv.org/abs/2109.00675)
