@@ -29,7 +29,7 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mode", type=str, default='basic', choices=SUPPORT_SCHEMES, help=f'Homomorphic encryption mode (default basic), support {SUPPORT_SCHEMES}')
-    parser.add_argument("-f", "--checkpoint_file", default==None, type=str, help='Model checkpoint file, .npy numpy file')
+    parser.add_argument("-f", "--checkpoint_file", default=None, type=str, help='Model checkpoint file, .npy numpy file')
     parser.add_argument("-r", "--rounds", default=5, type=int, help='Number of Federated Learning rounds, default 5 rounds')
     parser.add_argument("-n", "--min_available_clients", default=2, type=int, help='Total number of clients, default 2')
     parser.add_argument("-C", "--comment", type=str, default="", help='Comment for this process, will be added to the meta data and log')
