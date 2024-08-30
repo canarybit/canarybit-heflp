@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # except:
     #     raise ValueError(f"The checkpoint file does not exist or has a wrong format: {args.checkpoint_file}")
 
-    init_param =  None if args.checkpoint_file == None else np.load(args.checkpoint_file)
+    initial_params =  None if args.checkpoint_file == None else np.load(args.checkpoint_file)
     param_dict = {
         "min_available_clients": min_available_clients,
         "fraction_fit": 0.5,
