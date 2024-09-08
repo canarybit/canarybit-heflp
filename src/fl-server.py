@@ -29,7 +29,7 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--mode", type=str, default='basic', choices=SUPPORT_SCHEMES, help=f'Homomorphic encryption mode (default basic), support {SUPPORT_SCHEMES}')
-    parser.add_argument("-f", "--checkpoint_file", default=None, type=str, help='Model checkpoint file, .npy numpy file')
+    parser.add_argument("-f", "--checkpoint_file", type=str, help='Model checkpoint file, .npy numpy file')
     parser.add_argument("-r", "--rounds", default=5, type=int, help='Number of Federated Learning rounds, default 5 rounds')
     parser.add_argument("-n", "--min_available_clients", default=2, type=int, help='Total number of clients, default 2')
     parser.add_argument("-C", "--comment", type=str, default="", help='Comment for this process, will be added to the meta data and log')
@@ -51,12 +51,12 @@ if __name__ == '__main__':
     LOGGER.info(f"Meta | {meta}")
     LOGGER_EVAL.info(f"Meta | {meta}")
 
-    # try:
-    #     init_param = np.load(args.checkpoint_file)
-    #     length = len(init_param)
-    #     initial_params = fl.common.ndarrays_to_parameters([init_param])
-    # except:
-    #     raise ValueError(f"The checkpoint file does not exist or has a wrong format: {args.checkpoint_file}")
+    try:
+        init_param = np.load(args.checkpoint_file)
+        length = len(init_param)
+        initial_params = fl.common.ndarrays_to_parameters([init_param])
+    except:
+        raise ValueError(f"The checkpoint file does not exist or has a wrong format: {args.checkpoint_file}")
 
     init_param =  None if args.checkpoint_file == None else np.load(args.checkpoint_file)
     param_dict = {
@@ -72,10 +72,10 @@ if __name__ == '__main__':
         strategy = CKKSStrategy(evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
     elif mode == 'bfv':
         strategy = BFVStrategy(evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
-    # elif mode == 'flashe':
-    #     strategy = FlasheStrategy(model_len=length, evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
-    # elif mode == 'flashev2':
-    #     strategy = Flashev2Strategy(model_len=length, evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
+    elif mode == 'flashe':
+        strategy = FlasheStrategy(model_len=length, evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
+    elif mode == 'flashev2':
+        strategy = Flashev2Strategy(model_len=length, evaluate_metrics_aggregation_fn=weighted_average, initial_parameters=initial_params, **param_dict)
     else:
         raise ValueError(f"Not support HE mode {mode}! Please use flag -h for details")
 
