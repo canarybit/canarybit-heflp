@@ -15,7 +15,7 @@ logevalfile = f"{logger.create_id_by_timestamp()}-server-eval.log"
 LOGGER_EVAL =  logger.getEvalLogger(logfile=f"./.tmp/logs/{logevalfile}")
 
 from heflp.strategy import FlasheStrategy, CKKSStrategy, BFVStrategy, BasicStrategy, Flashev2Strategy
-from heflp import SUPPORT_SCHEMES, start_server
+from heflp import SUPPORT_poSCHEMES, start_server
 
 # Define metric aggregation function
 def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
