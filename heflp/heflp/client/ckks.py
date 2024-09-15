@@ -74,7 +74,7 @@ class CKKSClient(fl.client.Client):
         if heflp.info.EVALUATION_MODE:
             LOGGER_EVAL.debug(f"Time overhead | {T_MARKER.get_all_intervals()}") # Log the intervals for perf evaluation
         loss, accuracy = self.runner.test(self.model)
-        LOGGER.info("Evaluate done | accuracy:", accuracy)
+        LOGGER.info("Evaluate done")
         return EvaluateRes(
             Status(Code.OK, 'success'),
             loss,
