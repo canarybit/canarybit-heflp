@@ -89,8 +89,8 @@ input_shape = (X_train.shape[1], X_train.shape[2])
 initial_seq = Sequential()
 initial_seq.add(Input(shape=input_shape))
 initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
-input_seq = initial_seq.input
-x = initial_seq.output
+input_seq = initial_seq.inputs
+x = initial_seq.outputs
 
 output = TimeDistributed(Dense(input_shape[-1], activation="sigmoid"))(x)
 lstm_autoencoder = Model(inputs=input_seq, outputs=output)
