@@ -81,9 +81,12 @@ def reshaping_data(X, timesteps, test):
 
 input_file = sys.argv[1]
 X_train = pd.read_csv(input_file)
+print("\nTraining data shape:", X_train.shape)
+
 
 timesteps = timesteps_calculation(X_train, timesteps_max)
 X_train = reshaping_data(X_train, timesteps=timesteps,test=False)
+print("\nTraining data shape:", X_train.shape)
 
 input_shape = (X_train.shape[1], X_train.shape[2])
 initial_seq = Sequential()
