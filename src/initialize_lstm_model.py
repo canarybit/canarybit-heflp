@@ -88,7 +88,7 @@ timesteps = timesteps_calculation(X_train, timesteps_max)
 X_train = reshaping_data(X_train, timesteps=timesteps,test=False)
 print("\nTraining data shape:", X_train.shape)
 
-input_shape = (X_train.shape[1], X_train.shape[2])
+input_shape = (X_train.shape[0], X_train.shape[1], X_train.shape[2])
 initial_seq = Sequential()
 initial_seq.add(Input(shape=input_shape))
 initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
