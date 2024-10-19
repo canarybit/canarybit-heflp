@@ -136,6 +136,19 @@ def add_layer(layer_conf, x_input, X_train_shape=None):
         return TimeDistributed(Dense(X_train_shape[2], activation="sigmoid",
                                      kernel_initializer=initializers.get(init_scheme)))(x_input)
 
+def flatten_model_params(model):
+    '''Flatten the model into a 1D Numpy array (Vector)'''
+    if "keras" in sys.modules and isinstance(model,Model):
+        params = np.concatenate(
+            [param.flatten() for param in model.get_weights()]
+        )
+    else:
+        raise ValueError("Invalid model type. Expecting PyTorch or Keras model.")
+    return params
+
+def save_flattened_model_params(filepath:str, model):
+    '''Save the model parameters as a 1D vector'''
+    np.save(filepath, flatten_model_params(model))
 
 input_file = sys.argv[1]
 X_train = pd.read_csv(input_file)
@@ -173,6 +186,6 @@ lstm_autoencoder = Model(inputs=input_seq, outputs=output)
 lstm_autoencoder.summary()
 
 
-# save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
-# array = np.load('lstm_init.npy')
-# print(array.shape)
+save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
+array = np.load('lstm_init.npy')
+print(array.shape)
