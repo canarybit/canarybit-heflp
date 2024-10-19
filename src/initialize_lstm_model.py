@@ -1,6 +1,6 @@
 from models import FCN
 import numpy as np
-from heflp.training.params import save_flattened_model_params
+# from heflp.training.params import save_flattened_model_params
 from tensorflow.keras import initializers
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Input, Masking, Dense, Dropout, LSTM, RepeatVector, TimeDistributed, Bidirectional
@@ -170,7 +170,9 @@ for j in range(decoder_conf["n-layers"]):
 
 output = TimeDistributed(Dense(input_shape[-1], activation="sigmoid"))(x)
 lstm_autoencoder = Model(inputs=input_seq, outputs=output)
+lstm_autoencoder.summary()
 
-save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
-array = np.load('lstm_init.npy')
-print(array.shape)
+
+# save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
+# array = np.load('lstm_init.npy')
+# print(array.shape)
