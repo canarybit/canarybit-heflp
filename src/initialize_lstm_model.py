@@ -158,7 +158,7 @@ encoder_conf = lstm_autoencoder_conf["encoder"]
 
 # Encoder
 for i in range(encoder_conf["n-layers"]):
-    layer = layer = encoder_conf[str(i)]
+    layer = encoder_conf[str(i)]
     x = add_layer(layer, x, X_train.shape if layer["type"] in ["repeat-vector", "time-distributed"] else None)
 
 # Decoder
