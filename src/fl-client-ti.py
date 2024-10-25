@@ -32,13 +32,13 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 # Load the training and evaluation data
 def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
-    X_train_path = os.path.join(DIR, DATASET_LIST[0], FILE_LIST[3])
-    X_test_path = os.path.join(DIR, DATASET_LIST[0], FILE_LIST[2])
-    original_test_path = os.path.join(DIR, DATASET_LIST[0], FILE_LIST[0])
 
-    X_train = reading_files(X_train_path)
-    X_test = reading_files(X_test_path)
-    df_test = reading_files(original_test_path)
+    data_directory = "data/ti_training" 
+    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, cid)
+
+    X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
+    X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
+    df_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
 
     cols = list(X_test.columns)
     if n_splits!=1:

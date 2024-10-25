@@ -4,39 +4,11 @@ import numpy as np
 from tensorflow.keras import initializers
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Input, Masking, Dense, Dropout, LSTM, RepeatVector, TimeDistributed, Bidirectional
+from threatintellidataset import *
 
 import sys
 import pandas as pd
 timesteps_max = 10
-
-# LSTM Autoencoder model configuration
-model_conf = {
-    "lstm-autoencoder": {
-        "encoder": 
-            {
-                "n-layers": 5,
-                "0": {"type": "lstm", "size":32, "activation": "tanh", "return-sequences":True},
-                "1": {"type": "dropout", "rate":0.2},
-                "2": {"type": "lstm", "size":8, "activation": "tanh", "return-sequences":False},
-                "3": {"type": "dropout", "rate":0.2},
-                "4": {"type": "repeat-vector"}
-            },
-        "decoder": 
-            {
-                "n-layers": 5,
-                "0": {"type": "lstm", "size":8, "activation": "tanh", "return-sequences":True},
-                "1": {"type": "dropout", "rate":0.2},
-                "2": {"type": "lstm", "size":32, "activation": "tanh", "return-sequences":True},
-                "3": {"type": "dropout", "rate":0.2},
-                "4": {"type": "time-distributed"}
-            },
-        "optimizer": "adam",
-        "learning-rate": 0.001,
-        "loss": "mse",
-        "epochs": 50,
-        "batch-size": 25
-    }
-}
 
 def timesteps_calculation(df, timesteps_max):
 
@@ -159,6 +131,8 @@ X_train = reshaping_data(X_train, timesteps=timesteps,test=False)
 print("\nTraining data shape:", X_train.shape)
 
 input_shape = (X_train.shape[1], X_train.shape[2])
+lstm_autoencoder = create_lstm_autoencoder(input_shape, DEFAULT_MODEL_CONF)
+
 initial_seq = Sequential()
 initial_seq.add(Input(shape=input_shape))
 initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
