@@ -5,7 +5,7 @@
 *~
 # Cached filed that does not need to synchronize
 .tmp/*
-data/*
+# data/*
 outputs/*
 .vscode/
 
