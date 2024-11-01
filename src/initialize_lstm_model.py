@@ -139,7 +139,7 @@ initial_seq.add(Masking(mask_value=-1)) # Must match padding_value
 input_seq = initial_seq.inputs
 x = initial_seq.outputs
 
-lstm_autoencoder_conf = model_conf["lstm-autoencoder"]
+lstm_autoencoder_conf = DEFAULT_MODEL_CONF["lstm-autoencoder"]
 
 encoder_conf = lstm_autoencoder_conf["encoder"]
 
