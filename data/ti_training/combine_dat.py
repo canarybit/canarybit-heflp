@@ -4,8 +4,6 @@ import pandas as pd
 
 file_0 = "data/ti_training/0/X_test_original.csv"
 file_1 = "data/ti_training/1/X_test_original.csv"
-# path_0=os.path.join(os.path.dirname(os.getcwd()), file_0)
-# path_1=os.path.join(os.path.dirname(os.getcwd()), file_1)
 
 combined_df = pd.concat([pd.read_csv(file_0), pd.read_csv(file_1)], ignore_index=True, join='outer')
 combined_df.fillna(0, inplace=True)
