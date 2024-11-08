@@ -243,7 +243,7 @@ def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df
     """
 
     mask_indices = lstm_autoencoder.predict(X_train)
-    pred_test = lstm_autoencoder.predict(X_test)
+    pred_test = lstm_autoencoder_test_prediction(lstm_autoencoder=lstm_autoencoder, X_test=X_test)
 
     mse_train = np.mean(np.power(X_train - pred_train, 2), axis=1)
     mse_train_df = pd.DataFrame(mse_train, columns=columns)
@@ -262,6 +262,23 @@ def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df
 
     return mean_obs_mse_train, mean_obs_mse_test, mse_test_df, pred_test
 
+def lstm_autoencoder_test_prediction(lstm_autoencoder, X_test):
+    
+    """
+    Predicts the input values of the training and test data, storing the error obtained for each of them.
+    
+    Args:
+        lstm_autoencoder (keras.engine.training.Model): Length of each sequence in a batch.
+        X_test (DataFrame): Input test data frame.   
+    Returns:
+        X_test (DataFrame): Input test data frame.
+    """
+
+    X_test_values = np.array(X_test["Value"].tolist())
+    X_test_values = X_test_values.astype("float32")
+    predictions = lstm_autoencoder.predict(X_test_values)
+    
+    return predictions
 
 def anomalies_explanation(
         mean_obs_mse_test, 
