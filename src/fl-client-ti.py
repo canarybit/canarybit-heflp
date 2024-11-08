@@ -40,7 +40,7 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
     df_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
 
-    cols = list(X_test.columns)
+    cols = list(X_test.columns) 
     # if n_splits!=1:
     #     try:
     #         splits = split_training_dataset(X_train, n_splits)
@@ -49,8 +49,8 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
     #         print("Split data failed!")
     #         exit()
 
-    X_train = reshaping_data(X_train, timesteps=timesteps)
-    X_test = reshaping_data(X_test, timesteps=timesteps)
+    X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
+    X_test = reshaping_data(X_test, timesteps=timesteps, test=True)
 
     return X_train, X_test, df_test, cols
 
