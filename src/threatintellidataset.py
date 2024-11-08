@@ -242,7 +242,7 @@ def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df
         pred_test (ndarray): Predicted values for test data.
     """
 
-    mask_indices = lstm_autoencoder.predict(X_train)
+    pred_train = lstm_autoencoder.predict(X_train)
     pred_test = lstm_autoencoder_test_prediction(lstm_autoencoder=lstm_autoencoder, X_test=X_test)
 
     mse_train = np.mean(np.power(X_train - pred_train, 2), axis=1)
