@@ -52,6 +52,8 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
     X_test = reshaping_data(X_test, timesteps=timesteps, test=True)
+    print(X_train.shape, X_test.shape)
+
 
     return X_train, X_test, df_test, cols
 
@@ -136,7 +138,6 @@ if __name__ == '__main__':
 
     # Load the training data
     X_train, X_test, df_test, cols = load_data(cid, total_n)
-    print(X_train.shape, X_test.shape)
     data_shape = (X_train.shape[1], X_train.shape[2])
 
     model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)
