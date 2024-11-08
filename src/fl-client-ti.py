@@ -40,6 +40,7 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
     df_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
 
+    print(X_train.shape, X_test.shape)
     cols = list(X_test.columns) 
     # if n_splits!=1:
     #     try:
