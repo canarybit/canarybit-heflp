@@ -136,6 +136,7 @@ if __name__ == '__main__':
 
     # Load the training data
     X_train, X_test, df_test, cols = load_data(cid, total_n)
+    print(X_train.shape, X_test.shape)
     data_shape = (X_train.shape[1], X_train.shape[2])
 
     model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)
