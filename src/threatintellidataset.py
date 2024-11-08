@@ -112,7 +112,10 @@ def reshaping_data(X, timesteps, test):
     else:
         Xs = []
         for i in X.ProcessGuid.unique():
-            matrix_temporal = X[X.ProcessGuid == i].sort_values(by="UtcTime").drop(["ProcessGuid","UtcTime"], axis=1).values
+            x_i = X[X.ProcessGuid == i]
+            sorted_x_i = x_i.sort_values(by="UtcTime")
+            dropped_x_i = sorted_x_i.drop(["ProcessGuid","UtcTime"], axis=1)
+            matrix_temporal = dropped_x_i.values
 
             # Define padding values and amount
             padding_value = -1  # Change this to the value you want for padding
