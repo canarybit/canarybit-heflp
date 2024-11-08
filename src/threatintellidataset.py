@@ -125,6 +125,7 @@ def reshaping_data(X, timesteps, test):
             for j in range(len(matrix_temporal) - timesteps + 1): # Ensures that extracted substrings have uniform length of timesteps and do not go outside the original sequence boundary. Avoid extracting incomplete substring
                 Xs.append(padded_matrix[j:(j + timesteps)])
 
+        return np.array(Xs)
 
 def data_generator(input_data:NDArray, batch_size:int, timesteps:int, n_batches:int):
     
