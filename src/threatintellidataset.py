@@ -113,7 +113,11 @@ def reshaping_data(X, timesteps, test):
         Xs = []
         for i in X.ProcessGuid.unique():
             x_i = X[X.ProcessGuid == i]
+            print(x_i.columns)
+
             sorted_x_i = x_i.sort_values(by="UtcTime")
+            print(sorted_x_i.columns)
+
             dropped_x_i = sorted_x_i.drop(["ProcessGuid","UtcTime"], axis=1)
             matrix_temporal = dropped_x_i.values
 
