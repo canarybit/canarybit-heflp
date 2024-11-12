@@ -98,7 +98,6 @@ class LSTMRunner(TensorflowRunner):
             lstm_autoencoder=model,
             X_train=self.X_train,
             X_test=self.X_test,
-            df_test=self.df_test,
             columns=list(self.columns),
         )
         return mean_obs_mse_train, mean_obs_mse_test, mse_test_df, pred_test

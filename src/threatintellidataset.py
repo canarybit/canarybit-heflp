@@ -88,6 +88,7 @@ def reshaping_data(X, timesteps, test):
     
     if test:
         Xs = pd.DataFrame()
+
         for i in X.ProcessGuid.unique():
             sorteddf=X[X.ProcessGuid == i].sort_values(by="UtcTime")
             temp_col = sorteddf["UtcTime"]
@@ -224,7 +225,7 @@ def create_lstm_autoencoder(shape:Tuple[int,int], model_conf:dir):
 
     return lstm_autoencoder
 
-def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df_test, columns):
+def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, columns):
     
     """
     Predicts the input values of the training and test data, storing the error obtained for each of them.
@@ -250,7 +251,6 @@ def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df
 
     mse_test = np.mean(np.power(X_test - pred_test, 2), axis=1)
     mse_test_df = pd.DataFrame(mse_test, columns=columns)
-    mse_test_df.index = df_test.iloc[:len(X_test)].index
 
     mean_obs_mse_train_list = [mse_train_df.iloc[i].mean() for i in range(len(mse_train_df))]
     mean_obs_mse_test_list = [mse_test_df.iloc[i].mean() for i in range(len(mse_test_df))]
@@ -258,7 +258,6 @@ def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, df
     mean_obs_mse_train = pd.DataFrame(mean_obs_mse_train_list, columns=["mean_mse"])
 
     mean_obs_mse_test = pd.DataFrame(mean_obs_mse_test_list, columns=["mean_mse"])
-    mean_obs_mse_test.index = df_test.iloc[:len(X_test)].index
 
     return mean_obs_mse_train, mean_obs_mse_test, mse_test_df, pred_test
 
