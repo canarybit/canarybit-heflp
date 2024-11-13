@@ -85,7 +85,7 @@ def reshaping_data(X, timesteps, test):
         ndarray: Reshaped input data array of shape (n_samples - timesteps + 1, timesteps, features).
     
     """
-    
+    print(test)
     if test:
         Xs = pd.DataFrame()
 
