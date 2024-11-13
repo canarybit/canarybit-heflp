@@ -89,7 +89,6 @@ def reshaping_data(X, timesteps, test):
     if test:
         Xs = pd.DataFrame()
 
-        print('debug1')
         for i in X.ProcessGuid.unique():
             sorteddf=X[X.ProcessGuid == i].sort_values(by="UtcTime")
             temp_col = sorteddf["UtcTime"]
@@ -102,7 +101,7 @@ def reshaping_data(X, timesteps, test):
 
             # Pad the matrix along the rows
             padded_matrix = np.pad(matrix_temporal, ((padding_rows, 0), (0, 0)), mode='constant', constant_values=padding_value)
-            print('debug2')
+            print(Xs.shape)
             for j,z1,z2 in zip(range(len(matrix_temporal) - timesteps + 1),temp_col,Attack): # Ensures that extracted substrings have uniform length of timesteps and do not go outside the original sequence boundary. Avoid extracting incomplete substring
                 data = {'Value': [padded_matrix[j:(j + timesteps)]],
                         'ProcessGuid': [i],
@@ -111,6 +110,8 @@ def reshaping_data(X, timesteps, test):
                         "Attack":z2}
                 df = pd.DataFrame(data)
                 Xs=pd.concat([Xs,df])
+                print(Xs.shape)
+        print(Xs.shape)
         return Xs
     else:
         Xs = []
