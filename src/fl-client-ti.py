@@ -38,7 +38,6 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-    df_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
 
     print(X_train.shape, X_test.shape)
     cols = list(X_test.columns) 
@@ -51,11 +50,11 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
     #         exit()
 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
-    X_test = reshaping_data(X_test, timesteps=timesteps, test=True)
+    X_test_reshaping = reshaping_data(X_test, timesteps=timesteps, test=True)
     print(X_train.shape, X_test.shape)
 
 
-    return X_train, X_test, df_test, cols
+    return X_train, X_test, X_test_reshaping, cols
 
 # Customize the Runner for training and evaluating the LSTM model
 class LSTMRunner(TensorflowRunner):
@@ -63,7 +62,7 @@ class LSTMRunner(TensorflowRunner):
         self,
         X_train: NDArray,
         X_test: NDArray,
-        df_test: pd.DataFrame,
+        X_test_reshaping:  NDArray,
         columns: List[str],
         criterion: str,
         optimizer: keras.optimizers.Optimizer,
@@ -73,7 +72,7 @@ class LSTMRunner(TensorflowRunner):
     ) -> None:
         self.X_train = X_train
         self.X_test = X_test
-        self.df_test = df_test
+        self.X_test_reshaping = X_test_reshaping
         self.columns = columns
         if timesteps > 0:
             self.timesteps = timesteps
@@ -89,22 +88,26 @@ class LSTMRunner(TensorflowRunner):
 
     def _test_full(self, model):
         """Validate the model on the test set."""
-        (
-            mean_obs_mse_train,
-            mean_obs_mse_test,
-            mse_test_df,
-            pred_test,
-        ) = lstm_autoencoder_prediction_and_errors(
-            lstm_autoencoder=model,
-            X_train=self.X_train,
-            X_test=self.X_test,
-            columns=list(self.columns),
-        )
-        return mean_obs_mse_train, mean_obs_mse_test, mse_test_df, pred_test
+        # (
+        #     mean_obs_mse_train,
+        #     mean_obs_mse_test,
+        #     mse_test_df,
+        #     pred_test,
+        # ) = lstm_autoencoder_prediction_and_errors(
+        #     lstm_autoencoder=model,
+        #     X_train=self.X_train,
+        #     X_test=self.X_test,
+        #     X_test_reshaping = self.X_test_reshaping,
+        #     columns=list(self.columns),
+        # )
+
+        X_test_with_errors = lstm_autoencoder_prediction_and_processing_errors(lstm_autoencoder=model, 
+                                                                               X_test_reshaping = self.X_test_reshaping)
+        return X_test_with_errors
 
     def test(self, model):
-        _, s1, _, _ = self._test_full(model)
-        return s1.mean_mse.mean(), s1.mean_mse.mean()
+        X_test_with_errors = self._test_full(model)
+        return X_test_reshaping['mae'].mean(), X_test_with_errors['absolute_error'].mean()
 
 if __name__ == '__main__':
     
@@ -136,7 +139,7 @@ if __name__ == '__main__':
     LOGGER.info(f"Meta | {meta}")
 
     # Load the training data
-    X_train, X_test, df_test, cols = load_data(cid, total_n)
+    X_train, X_test, X_test_reshaping, cols = load_data(cid, total_n)
     data_shape = (X_train.shape[1], X_train.shape[2])
 
     model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)
@@ -147,7 +150,7 @@ if __name__ == '__main__':
     if if_training:
         '''If standard training'''
         optimizer = keras.optimizers.Adam(learning_rate=0.001)
-        runner = LSTMRunner(X_train, X_test, df_test, cols, 'mse', optimizer, 100)
+        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 100)
     else:
         '''If test only:'''
         train_gen = static_weight_generator(1000)

@@ -227,6 +227,35 @@ def create_lstm_autoencoder(shape:Tuple[int,int], model_conf:dir):
 
     return lstm_autoencoder
 
+def lstm_autoencoder_prediction_and_processing_errors(lstm_autoencoder, X_test_reshaping):
+    
+    """
+    Processes the errors between true values and predictions, calculating the Mean Absolute Error (MAE).
+
+    Args:
+        X_test_values (ndarray): Array containing the true values (ground truth). 
+                Values equal to -1.0 are treated as missing and will be ignored.
+        predictions (ndarray): Array containing the predicted values from the model.
+        X_test (DataFrame): Pandas DataFrame that stores additional features and will be updated with the error metrics.
+    
+    Returns:
+        X_test (DataFrame): Updated DataFrame with two new columns:
+            - 'absolute_error': The absolute error for each element.
+            - 'mae': The Mean Absolute Error (MAE) for each sample, ignoring values where true values are -1.0.
+        absolute_error (ndarray): The absolute error array after processing.
+    """
+    X_test_values = np.array(X_test_reshaping["Value"].tolist())
+    X_test_values = X_test_values.astype("float32")
+    predictions = lstm_autoencoder.predict(X_test_values)
+
+    mask = (X_test_values != -1.0).astype(np.float32)
+
+    absolute_error = np.abs(X_test_values - predictions)  # absolute error
+    absolute_error[X_test_values == -1.0] = 0.0
+    X_test_reshaping['absolute_error'] = list(absolute_error)
+    X_test_reshaping['mae'] = np.sum(absolute_error, axis=(1, 2)) / np.sum(mask, axis=(1, 2))  # MAE
+    return X_test_reshaping
+
 def lstm_autoencoder_prediction_and_errors(lstm_autoencoder, X_train, X_test, columns):
     
     """
@@ -279,7 +308,7 @@ def lstm_autoencoder_test_prediction(lstm_autoencoder, X_test):
     X_test_values = X_test_values.astype("float32")
     predictions = lstm_autoencoder.predict(X_test_values)
     
-    return predictions
+    return predictions, X_test_values
 
 def anomalies_explanation(
         mean_obs_mse_test, 
