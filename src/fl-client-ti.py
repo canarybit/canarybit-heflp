@@ -109,6 +109,8 @@ class LSTMRunner(TensorflowRunner):
 
     def train(self, model, epochs: int = 50):
 
+        print("echo:", epochs)
+
         train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=self.n_batches)
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
