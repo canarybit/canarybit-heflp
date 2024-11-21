@@ -110,11 +110,11 @@ class LSTMRunner(TensorflowRunner):
         X_test_with_errors = self._test_full(model)
         return X_test_reshaping['mae'].mean(), X_test_with_errors['absolute_error'].mean()
 
-    def train(self, model):
+    def train(self, model, epochs: int = 1):
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
                                    min_delta=0.001, mode='min')
-        model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=50,callbacks=[early_stopping])
+        model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
 if __name__ == '__main__':
     
