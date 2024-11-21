@@ -26,5 +26,5 @@ class BasicClient(fl.client.NumPyClient):
         print("mae loss", mae_loss, type(mae_loss))
         accuracy = 0.9
         print("accuracy", accuracy, type(accuracy))
-        return mae_loss, size, {"accuracy": accuracy}
+        return [mae_loss, size, {"accuracy": accuracy}]
 
