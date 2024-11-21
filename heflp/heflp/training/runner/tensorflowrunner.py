@@ -43,6 +43,7 @@ class TensorflowRunner(Runner):
             raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
     def train(self, model: keras.Model, epochs: int = 1):
+        print("tsTrainingxxxxxxxxxxxxxx")
         self._compile_model(model)
         model.fit_generator(generator=self.train_gen, steps_per_epoch=self.train_steps, epochs=epochs)
 

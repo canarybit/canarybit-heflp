@@ -104,6 +104,7 @@ class LSTMRunner(TensorflowRunner):
         return X_test_with_errors
 
     def test(self, model):
+        print("testingxxxxxxxxxxxxxx")
         X_test_with_errors = self._test_full(model)
         return X_test_reshaping['mae'].mean(), X_test_with_errors['absolute_error'].mean()
 
