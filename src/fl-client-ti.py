@@ -39,8 +39,6 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-
-    print(X_train.shape, X_test.shape)
     cols = list(X_test.columns) 
     # if n_splits!=1:
     #     try:
@@ -52,7 +50,6 @@ def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
     X_test_reshaping = reshaping_data(X_test, timesteps=timesteps, test=True)
-    print(X_train.shape, X_test.shape)
 
 
     return X_train, X_test, X_test_reshaping, cols
@@ -110,7 +107,7 @@ class LSTMRunner(TensorflowRunner):
         X_test_with_errors = self._test_full(model)
         return X_test_reshaping['mae'].mean(), X_test_with_errors['absolute_error'].mean()
 
-    def train(self, model, epochs: int = 1):
+    def train(self, model, epochs: int = 50):
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
                                    min_delta=0.001, mode='min')
