@@ -119,6 +119,13 @@ class LSTMRunner(TensorflowRunner):
     #     print("epochs:", epochs)
     #     model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
+
+    def get_dataset_size(self, mode):
+        if mode == 'test':
+            return self.X_test.shape[0]
+        elif mode == 'train':
+            return self.X_train.shape[0]
+
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
