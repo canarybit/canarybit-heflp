@@ -27,6 +27,7 @@ from threatintellidataset import *
 from heflp.training.runner import TensorflowRunner, FakeRunner, static_weight_generator
 from heflp.training import params
 from heflp import SUPPORT_SCHEMES, start_client
+from tensorflow.keras.callbacks import EarlyStopping
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -34,7 +35,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/ti_training" 
-    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
+    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, '1')
 
     X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
@@ -108,6 +109,12 @@ class LSTMRunner(TensorflowRunner):
     def test(self, model):
         X_test_with_errors = self._test_full(model)
         return X_test_reshaping['mae'].mean(), X_test_with_errors['absolute_error'].mean()
+
+    def train(self, model):
+
+        early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
+                                   min_delta=0.001, mode='min')
+        model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=50,callbacks=[early_stopping])
 
 if __name__ == '__main__':
     
