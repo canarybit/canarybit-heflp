@@ -1,4 +1,5 @@
 import flwr as fl
+from flwr.common import EvaluateIns, EvaluateRes, FitIns, FitRes, Status, Code, Parameters
 
 from heflp.training.runner import Runner
 from heflp.training.params import flatten_model_params, unflatten_model_params
@@ -26,5 +27,9 @@ class BasicClient(fl.client.NumPyClient):
         print("mae loss", mae_loss, type(mae_loss))
         accuracy = 0.9
         print("accuracy", accuracy, type(accuracy))
-        return [mae_loss, size, {"accuracy": accuracy}]
-
+        return EvaluateRes(
+            Status(Code.OK, 'success'),
+            mae_loss,
+            size,
+            {"accuracy": accuracy}
+        )
