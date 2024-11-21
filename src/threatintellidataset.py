@@ -2,7 +2,7 @@ import pandas as pd
 
 import plotly
 import plotly.express as px
-from pylab import *
+# from pylab import *
 
 from typing import Tuple
 from sklearn.preprocessing import MinMaxScaler
