@@ -27,7 +27,7 @@ class BasicClient(fl.client.NumPyClient):
         print("mae loss", mae_loss, type(mae_loss))
         accuracy = 0.9
         print("accuracy", accuracy, type(accuracy))
-        results = (mae_loss, size, {"accuracy": accuracy})
+        results = (float(mae_loss), size, {"accuracy": accuracy})
         print("lenth", len(results))
         if not (
             isinstance(results[0], float)
