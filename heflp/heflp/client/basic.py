@@ -27,4 +27,21 @@ class BasicClient(fl.client.NumPyClient):
         print("mae loss", mae_loss, type(mae_loss))
         accuracy = 0.9
         print("accuracy", accuracy, type(accuracy))
-        return (mae_loss, size, {"accuracy": accuracy})
+        results = (mae_loss, size, {"accuracy": accuracy})
+        if not (
+            len(results) == 3
+            and isinstance(results[0], float)
+            and isinstance(results[1], int)
+            and isinstance(results[2], dict)
+        ):
+            print("len mismatch")
+        if not (
+            isinstance(results[0], float)
+        ):
+            print("1 mismatch")
+        if not (
+            isinstance(results[1], int)
+        ):
+            print("2")
+
+        return results
