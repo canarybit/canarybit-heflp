@@ -119,11 +119,9 @@ class LSTMRunner(TensorflowRunner):
         X_train_df=pd.DataFrame()
         X_train_df["error"] = mae
 
-        th2=X_train_df.error.apply("mean")+X_train_df.error.apply("std")*2.5
-        th1=np.percentile(X_train_df.error, 99)
-        threshold = max(th1, th2) 
+        threshold=np.percentile(X_train_df.error, 99)
         print("THRESHOLD :", threshold)
-        
+
         df_anomalies = pd.DataFrame()
         df_anomalies = pd.concat([df_anomalies, X_test_with_errors])
         mean_error = 'mae'
