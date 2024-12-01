@@ -21,12 +21,7 @@ class BasicClient(fl.client.NumPyClient):
     def evaluate(self, parameters, config):
         model = self.model
         unflatten_model_params(parameters[0], model)
-        size = self.runner.get_dataset_size('test')
-        print("test size", size, type(size))
-        mae_loss = self.runner.test(model)
-        print("mae loss", mae_loss, type(mae_loss))
-        accuracy = 0.9
-        print("accuracy", accuracy, type(accuracy))
-        results = (float(mae_loss), size, {"accuracy": accuracy})
+        mae_loss, tp_rate = self.runner.test(model)
+        results = (float(mae_loss), self.runner.get_dataset_size('test'), {"accuracy": tp_rate})
 
         return results

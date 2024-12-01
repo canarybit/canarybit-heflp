@@ -106,10 +106,34 @@ class LSTMRunner(TensorflowRunner):
 
     def test(self, model):
         print("testingxxxxxxxxxxxxxx")
-        X_test_with_errors = self._test_full(model)
-        return X_test_with_errors['mae'].mean()
 
-    def train(self, model: keras.Model, epochs: int = 50):
+        X_test_with_errors = self._test_full(model)
+        X_test_with_errors.sort_values("mae", ascending=False)
+
+        X_train = self.X_train.astype('float32')
+        pred_train = model.predict(X_train)
+        absolute_errors = np.abs(X_train - pred_train)
+        mask = (X_train != -1.0).astype(np.float32)
+        absolute_errors[X_train == -1.0] = 0.0
+        mae = np.sum(absolute_errors, axis=(1, 2)) / np.sum(mask, axis=(1, 2))
+        X_train_df=pd.DataFrame()
+        X_train_df["error"] = mae
+
+        th2=X_train_df.error.apply("mean")+X_train_df.error.apply("std")*2.5
+        th1=np.percentile(X_train_df.error, 99)
+        threshold = max(th1, th2) 
+        print("THRESHOLD :", threshold)
+        
+        df_anomalies = pd.DataFrame()
+        df_anomalies = pd.concat([df_anomalies, X_test_with_errors])
+        mean_error = 'mae'
+        df_anomalies['anomaly'] = df_anomalies[mean_error] > threshold
+        
+        TP=len(df_anomalies[(df_anomalies["Attack"]==1) & (df_anomalies['anomaly'])])
+
+        return X_test_with_errors['mae'].mean(), TP
+
+    def train(self, model: keras.Model, epochs: int = 20):
 
         print("CUSTOMIZES TRAINING with epochs:", epochs)
 
