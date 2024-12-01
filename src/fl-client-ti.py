@@ -72,6 +72,7 @@ class LSTMRunner(TensorflowRunner):
         self.X_test = X_test
         self.X_test_reshaping = X_test_reshaping
         self.columns = columns
+        self.batch_size = batch_size
         if timesteps > 0:
             self.timesteps = timesteps
         else:
