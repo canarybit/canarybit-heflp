@@ -131,7 +131,7 @@ class LSTMRunner(TensorflowRunner):
 
         return X_test_with_errors['mae'].mean(), TP
 
-    def train(self, model: keras.Model, epochs: int = 20):
+    def train(self, model: keras.Model, epochs: int = 5):
 
         print("CUSTOMIZES TRAINING with epochs:", epochs)
 
@@ -140,6 +140,7 @@ class LSTMRunner(TensorflowRunner):
         # except Exception as e:
         #     raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
+        print("batch size:", self.batch_size)
         n_batches = len(self.X_train) // self.batch_size
         train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=n_batches)
 
