@@ -118,7 +118,8 @@ class LSTMRunner(TensorflowRunner):
         # except Exception as e:
         #     raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
-        train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=self.n_batches)
+        n_batches = len(self.X_train) // self.batch_size
+        train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=n_batches)
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
                                    min_delta=0.001, mode='min')
