@@ -108,16 +108,20 @@ class LSTMRunner(TensorflowRunner):
         X_test_with_errors = self._test_full(model)
         return X_test_with_errors['mae'].mean()
 
-    # def train(self, model, epochs: int = 50):
+    def train(self, model: keras.Model, epochs: int = 50):
 
-    #     print("echo:", epochs)
+        print("CUSTOMIZES TRAINING with epochs:", epochs)
 
-    #     train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=self.n_batches)
+        if not model._is_compiled:
+            model.compile(optimizer=self.optimizer, loss=self.criterion, metrics=[self.metric])
+        # except Exception as e:
+        #     raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
-    #     early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
-    #                                min_delta=0.001, mode='min')
-    #     print("epochs:", epochs)
-    #     model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
+        train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=self.n_batches)
+
+        early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
+                                   min_delta=0.001, mode='min')
+        model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
 
     def get_dataset_size(self, mode):

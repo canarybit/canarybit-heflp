@@ -61,8 +61,8 @@ if __name__ == '__main__':
     init_param =  None if args.checkpoint_file == None else np.load(args.checkpoint_file)
     param_dict = {
         "min_available_clients": min_available_clients,
-        "fraction_fit": 0.5,
-        "fraction_evaluate": 0.5,
+        "fraction_fit": 1.0,
+        "fraction_evaluate": 1.0,
         "min_evaluate_clients": 1,
     }
     # Define the strategy
