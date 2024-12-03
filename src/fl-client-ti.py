@@ -124,6 +124,7 @@ class LSTMRunner(TensorflowRunner):
 
         X_test_reshaping['anomaly'] = X_test_reshaping['mae'] > threshold
         print("abnormal numbers", len(X_test_reshaping['anomaly'] == True))
+        print("Tagged abnormals", len(X_test_reshaping["Attack"]==1))
         TP=len(X_test_reshaping[(X_test_reshaping["Attack"]==1) & (X_test_reshaping['anomaly'])])
 
         return X_test_with_errors['mae'].mean(), TP
@@ -193,7 +194,7 @@ if __name__ == '__main__':
     if if_training:
         '''If standard training'''
         optimizer = keras.optimizers.Adam(learning_rate=0.001)
-        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 100)
+        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 200)
     else:
         '''If test only:'''
         train_gen = static_weight_generator(1000)
