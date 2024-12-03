@@ -122,12 +122,9 @@ class LSTMRunner(TensorflowRunner):
         threshold=np.percentile(X_train_df.error, 99)
         print("THRESHOLD :", threshold)
 
-        df_anomalies = pd.DataFrame()
-        df_anomalies = pd.concat([df_anomalies, X_test_with_errors])
-        mean_error = 'mae'
-        df_anomalies['anomaly'] = df_anomalies[mean_error] > threshold
-        
-        TP=len(df_anomalies[(df_anomalies["Attack"]==1) & (df_anomalies['anomaly'])])
+        X_test_reshaping['anomaly'] = X_test_reshaping['mae'] > threshold
+        print("abnormal numbers", len(X_test_reshaping['anomaly'] == True))
+        TP=len(X_test_reshaping[(X_test_reshaping["Attack"]==1) & (X_test_reshaping['anomaly'])])
 
         return X_test_with_errors['mae'].mean(), TP
 
