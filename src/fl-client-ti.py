@@ -124,10 +124,14 @@ class LSTMRunner(TensorflowRunner):
 
         X_test_reshaping['anomaly'] = X_test_reshaping['mae'] > threshold
         print("abnormal numbers", len(X_test_reshaping[(X_test_reshaping['anomaly'])]))
-        print("Tagged abnormals", len(X_test_reshaping[(X_test_reshaping["Attack"]==1)]))
-        TP=len(X_test_reshaping[(X_test_reshaping["Attack"]==1) & (X_test_reshaping['anomaly'])])
-
-        return X_test_with_errors['mae'].mean(), TP
+        print("Tagged abnormals", len(X_test_reshaping[(X_test_reshaping["Attack"]=='1')]))
+        TP=len(X_test_reshaping[(X_test_reshaping["Attack"]=='1') & (X_test_reshaping['anomaly'])])
+        TN=len(X_test_reshaping[(X_test_reshaping["Attack"]=='0') & (X_test_reshaping['anomaly'] == False)])
+        FP=len(X_test_reshaping[(X_test_reshaping["Attack"]=='0') & (X_test_reshaping['anomaly'] == True)])
+        FN=len(X_test_reshaping[(X_test_reshaping["Attack"]=='1') & (X_test_reshaping['anomaly'] == False)])
+        TPrate=TP/(TP+FN)
+        
+        return X_test_with_errors['mae'].mean(), TPrate
 
     def train(self, model: keras.Model, epochs: int = 5):
 
