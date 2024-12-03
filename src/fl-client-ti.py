@@ -129,9 +129,27 @@ class LSTMRunner(TensorflowRunner):
         TN=len(X_test_reshaping[(X_test_reshaping["Attack"]=='0') & (X_test_reshaping['anomaly'] == False)])
         FP=len(X_test_reshaping[(X_test_reshaping["Attack"]=='0') & (X_test_reshaping['anomaly'] == True)])
         FN=len(X_test_reshaping[(X_test_reshaping["Attack"]=='1') & (X_test_reshaping['anomaly'] == False)])
-        TPrate=TP/(TP+FN)
+        FNrate=TP/(TP+FN)
+
+
+        if TP+FN == 0:
+            TPrate=0
+            FNrate=0
+        else:
         
-        return X_test_with_errors['mae'].mean(), TPrate
+            TPrate=TP/(TP+FN)
+            FNrate=FN/(TP+FN)
+
+        if TN+FP == 0:
+            TNrate=0
+            FPrate=0
+        else:
+            TNrate=TN/(TN+FP)
+            FPrate=FP/(TN+FP)
+        print("TPrate: ", TPrate, "TNrate: ", TNrate)
+        print("FNrate: ", FNrate, "FPrate: ", FPrate)
+
+        return X_test_with_errors['mae'].mean(), FNrate
 
     def train(self, model: keras.Model, epochs: int = 5):
 
