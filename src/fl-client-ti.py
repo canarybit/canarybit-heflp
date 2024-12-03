@@ -194,7 +194,7 @@ if __name__ == '__main__':
     if if_training:
         '''If standard training'''
         optimizer = keras.optimizers.Adam(learning_rate=0.001)
-        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 200)
+        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 50)
     else:
         '''If test only:'''
         train_gen = static_weight_generator(1000)
