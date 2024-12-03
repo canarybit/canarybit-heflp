@@ -123,8 +123,8 @@ class LSTMRunner(TensorflowRunner):
         print("THRESHOLD :", threshold)
 
         X_test_reshaping['anomaly'] = X_test_reshaping['mae'] > threshold
-        print("abnormal numbers", len(X_test_reshaping['anomaly'] == True))
-        print("Tagged abnormals", len(X_test_reshaping["Attack"]==1))
+        print("abnormal numbers", len(X_test_reshaping[(X_test_reshaping['anomaly'])]))
+        print("Tagged abnormals", len(X_test_reshaping[(X_test_reshaping["Attack"]==1)]))
         TP=len(X_test_reshaping[(X_test_reshaping["Attack"]==1) & (X_test_reshaping['anomaly'])])
 
         return X_test_with_errors['mae'].mean(), TP
