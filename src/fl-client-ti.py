@@ -131,6 +131,8 @@ class LSTMRunner(TensorflowRunner):
         FN=len(X_test_reshaping[(X_test_reshaping["Attack"]=='1') & (X_test_reshaping['anomaly'] == False)])
         FNrate=TP/(TP+FN)
 
+        print("TP: ", TP, "TN: ", TN)
+        print("FN: ", FN, "FP: ", FP)
 
         if TP+FN == 0:
             TPrate=0

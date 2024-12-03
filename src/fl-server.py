@@ -62,7 +62,7 @@ if __name__ == '__main__':
     param_dict = {
         "min_available_clients": min_available_clients,
         "fraction_fit": 1.0,
-        "fraction_evaluate": 1.0,
+        "fraction_evaluate": 0.5,
         "min_evaluate_clients": 1,
     }
     # Define the strategy
