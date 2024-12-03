@@ -151,7 +151,7 @@ class LSTMRunner(TensorflowRunner):
         print("TPrate: ", TPrate, "TNrate: ", TNrate)
         print("FNrate: ", FNrate, "FPrate: ", FPrate)
 
-        return X_test_with_errors['mae'].mean(), FNrate
+        return X_test_with_errors['mae'].mean(), TPrate
 
     # def train(self, model: keras.Model, epochs: int = 5):
 
