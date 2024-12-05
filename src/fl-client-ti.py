@@ -35,7 +35,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 def load_data(cid:int=0, n_splits:int=1, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/ti_training" 
-    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, '0')
+    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
 
     X_train = reading_files(os.path.join(input_data_folder_path,"X_train_original.csv"))
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test_original.csv"))
