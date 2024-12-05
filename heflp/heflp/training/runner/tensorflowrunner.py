@@ -1,6 +1,7 @@
 from typing import Generator
 from .base import Runner, RunnerException
 from heflp.utils import logger
+from tensorflow.keras.callbacks import EarlyStopping
 
 LOGGER = logger.getLogger()
 try:
@@ -45,7 +46,10 @@ class TensorflowRunner(Runner):
     def train(self, model: keras.Model, epochs: int = 1):
         print("tsTrainingxxxxxxxxxxxxxx")
         self._compile_model(model)
-        model.fit_generator(generator=self.train_gen, steps_per_epoch=self.train_steps, epochs=epochs)
+
+        early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
+                                   min_delta=0.001, mode='min')
+        model.fit(x=self.train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
     def test(self, model: keras.Model):
         self._compile_model(model)
