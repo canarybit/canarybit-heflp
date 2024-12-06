@@ -450,35 +450,49 @@ def anomaly_detected(mean_obs_mse_test, mse_test_df, df_test, X_test):
     
     return df_test_final
 
-# Split the training dataset into several pieces, each of which containing the data for one client
-def split_training_dataset(df:pd.DataFrame, n:int=2):
-    def split(sequence:list, sep):
-        chunk = [sep]
-        sequence.pop(0)
+# Split the training dataset into several pieces, each containing the data for one client
+def split_training_dataset(df: pd.DataFrame, n: int = 2):
+    def split(sequence: list, sep):
+        """Split a sequence based on a separator."""
+        chunk = []
         for val in sequence:
             if val == sep:
-                yield chunk
-                chunk = [sep]
+                if chunk:
+                    yield chunk
+                chunk = [val]
             else:
                 chunk.append(val)
-        yield chunk
+        if chunk:
+            yield chunk
 
+    # Convert DataFrame to list of lists
     df_list = df.values.tolist()
-    dflist_splits = list(split(df_list, df_list[0])) # the first row as delimiter
+
+    # Check if df_list is empty
+    if not df_list:
+        raise ValueError("Input DataFrame is empty!")
+
+    # Use the first row as the delimiter
+    delimiter = df_list[0]
+
+    # Split the list into chunks
+    dflist_splits = list(split(df_list, delimiter))
+    if not dflist_splits:
+        raise ValueError("Failed to split the DataFrame. Check the structure and delimiter.")
+
+    # Calculate lengths of each chunk
     len_splits = [len(i) for i in dflist_splits]
-    # Split the df according to the process
+
+    # Reconstruct DataFrames for each split
     df_splits = []
     start = 0
     for size in len_splits:
-        ss = df[start:start+size]
+        ss = df.iloc[start:start+size]
         df_splits.append(ss)
-        start = start + size
+        start += size
 
-    # Combine processes into preset n pieses
+    # Combine processes into `n` pieces
     idx_splits = np.array_split(np.arange(len(df_splits)), n)
     n_combined_splits = [pd.concat([df_splits[idx] for idx in idx_list]) for idx_list in idx_splits]
-    # for s in n_combined_splits:
-    #     print(s.index.tolist())
-    #     print(len(s))
 
     return n_combined_splits
