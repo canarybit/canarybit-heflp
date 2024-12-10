@@ -32,7 +32,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Load the training and evaluation data
-def load_data(cid:int=0, timesteps:int=10):
+def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/ti_training" 
     print("CLIENT CID", str(int(cid/2)), cid%2)
@@ -41,18 +41,18 @@ def load_data(cid:int=0, timesteps:int=10):
     X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
     X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
     cols = list(X_test.columns) 
-    n_splits = 2
-    if n_splits!=1:
+    if total_n == 4:
         try:
-            splits = split_training_dataset(X_train, n_splits)
-            X_train = splits[cid%2]
+            train_split = split_into_two(X_train)
+            X_train = train_split[cid%2]
+            test_split = split_into_two(X_test)
+            X_test = test_split[cid%2]
         except:
             print("Split data failed!")
             exit()
 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
     X_test_reshaping = reshaping_data(X_test, timesteps=timesteps, test=True)
-
 
     return X_train, X_test, X_test_reshaping, cols
 
@@ -209,7 +209,7 @@ if __name__ == '__main__':
     LOGGER.info(f"Meta | {meta}")
 
     # Load the training data
-    X_train, X_test, X_test_reshaping, cols = load_data(cid)
+    X_train, X_test, X_test_reshaping, cols = load_data(cid, total_n)
     data_shape = (X_train.shape[1], X_train.shape[2])
 
     model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)

@@ -13,6 +13,7 @@ from keras.layers import Input, Dense, Dropout, LSTM, RepeatVector, TimeDistribu
 from keras import regularizers
 from keras.models import Sequential
 from keras_preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
 
 import re
 import os
@@ -449,6 +450,10 @@ def anomaly_detected(mean_obs_mse_test, mse_test_df, df_test, X_test):
     mse_df = mse_df.sort_values(by="mean_mse", ascending=False)
     
     return df_test_final
+
+def split_into_two(df: pd.DataFrame):
+    df1, df2 = train_test_split(df, test_size=0.5, random_state=42)
+    return [df1, df2]
 
 # Split the training dataset into several pieces, each containing the data for one client
 def split_training_dataset(df: pd.DataFrame, n: int = 2):
