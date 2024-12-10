@@ -73,12 +73,11 @@ class CKKSClient(fl.client.Client):
         self._extract_model(ins.parameters, ins.config.get(CKKSProperty.INITIAL.value, None))
         if heflp.info.EVALUATION_MODE:
             LOGGER_EVAL.debug(f"Time overhead | {T_MARKER.get_all_intervals()}") # Log the intervals for perf evaluation
-        mae_loss = self.runner.test(self.model)
-        accuracy = 0.9
-        LOGGER.info(f"Evaluate done | accuracy: {accuracy}")
+        mae_loss, tp_rate = self.runner.test(self.model)
+        LOGGER.info(f"Evaluate done | accuracy: {tp_rate}")
         return EvaluateRes(
             Status(Code.OK, 'success'),
             float(mae_loss),
             self.runner.get_dataset_size('test'),
-            {"accuracy": accuracy}
+            {"accuracy": tp_rate}
         )
