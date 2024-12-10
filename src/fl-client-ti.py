@@ -36,12 +36,33 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/ti_training" 
     print("CLIENT CID", str(int(cid/2)), cid%2)
-    input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(int(cid/2)))
 
-    X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
-    X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-    cols = list(X_test.columns) 
-    if total_n == 4:
+    if total_n > 4:
+        folder_num = 0 if cid == 0 else 1
+        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(folder_num))
+
+        X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
+        X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
+        cols = list(X_test.columns) 
+
+        if cid!=0:
+            try:
+                train_split = np.array_split(X_train, total_n - 1)
+                X_train = train_split[cid - 1]
+                test_split = np.array_split(X_test, total_n - 1)
+                X_test = test_split[cid - 1]
+            except:
+                print("Split data failed!")
+                exit()
+                
+    elif total_n == 4:
+
+        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(int(cid/2)))
+
+        X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
+        X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
+        cols = list(X_test.columns) 
+
         try:
             train_split = split_into_two(X_train)
             X_train = train_split[cid%2]
