@@ -42,6 +42,7 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
+        cols = list(X_test.columns) 
 
     if total_n > 4:
         folder_num = 0 if cid == 0 else 1
