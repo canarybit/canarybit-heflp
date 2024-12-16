@@ -34,7 +34,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 # Load the training and evaluation data
 def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
-    data_directory = "canarybit-heflp/data/ti_training" 
+    data_directory = "canarybit-heflp/data/10-17" 
     print("CLIENT CID", str(int(cid/2)), cid%2)
 
     if total_n > 4:
