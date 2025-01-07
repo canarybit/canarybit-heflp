@@ -2,6 +2,7 @@ from typing import Generator
 from .base import Runner, RunnerException
 from heflp.utils import logger
 from tensorflow.keras.callbacks import EarlyStopping
+import numpy as np
 
 LOGGER = logger.getLogger()
 try:
@@ -50,6 +51,18 @@ class TensorflowRunner(Runner):
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
                                    min_delta=0.001, mode='min')
         model.fit(x=self.train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
+
+        X_train = self.X_train.astype('float32')
+        pred_train = model.predict(X_train)
+        absolute_errors = np.abs(X_train - pred_train)
+        mask = (X_train != -1.0).astype(np.float32)
+        absolute_errors[X_train == -1.0] = 0.0
+        mae = np.sum(absolute_errors, axis=(1, 2)) / np.sum(mask, axis=(1, 2))
+        X_train_df=pd.DataFrame()
+        X_train_df["error"] = mae
+
+        threshold=np.percentile(X_train_df.error, 99)
+        print("THRESHOLD :", threshold)
 
     def test(self, model: keras.Model):
         self._compile_model(model)
