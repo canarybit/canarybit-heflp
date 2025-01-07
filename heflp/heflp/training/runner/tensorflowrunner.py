@@ -3,6 +3,7 @@ from .base import Runner, RunnerException
 from heflp.utils import logger
 from tensorflow.keras.callbacks import EarlyStopping
 import numpy as np
+import pandas as pd
 
 LOGGER = logger.getLogger()
 try:
