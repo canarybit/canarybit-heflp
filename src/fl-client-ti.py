@@ -148,7 +148,7 @@ class LSTMRunner(TensorflowRunner):
 
         threshold=np.percentile(X_train_df.error, 99)
         print("THRESHOLD :", threshold)
-        
+
         X_test_with_errors = self._test_full(model)
         X_test_with_errors.sort_values("mae", ascending=False)
 
@@ -182,22 +182,25 @@ class LSTMRunner(TensorflowRunner):
 
         return X_test_with_errors['mae'].mean(), TPrate
 
-    # def train(self, model: keras.Model, epochs: int = 5):
+    def train(self, model: keras.Model, epochs: int = 1):
+        print("Client training")
+        self._compile_model(model)
 
-    #     print("CUSTOMIZES TRAINING with epochs:", epochs)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
+                                   min_delta=0.001, mode='min')
+        model.fit(x=self.train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
-    #     if not model._is_compiled:
-    #         model.compile(optimizer=self.optimizer, loss=self.criterion, metrics=[self.metric])
-    #     # except Exception as e:
-    #     #     raise RunnerException(f"Failed to compile the model: {e.args[0]}")
+        X_train = self.X_train.astype('float32')
+        pred_train = model.predict(X_train)
+        absolute_errors = np.abs(X_train - pred_train)
+        mask = (X_train != -1.0).astype(np.float32)
+        absolute_errors[X_train == -1.0] = 0.0
+        mae = np.sum(absolute_errors, axis=(1, 2)) / np.sum(mask, axis=(1, 2))
+        X_train_df=pd.DataFrame()
+        X_train_df["error"] = mae
 
-    #     print("batch size:", self.batch_size)
-    #     n_batches = len(self.X_train) // self.batch_size
-    #     train_gen = data_generator(batch_size=self.batch_size, timesteps=self.timesteps, input_data=self.X_train, n_batches=n_batches)
-
-    #     early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
-    #                                min_delta=0.001, mode='min')
-    #     model.fit(x=train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
+        threshold=np.percentile(X_train_df.error, 99)
+        print("THRESHOLD :", threshold)
 
 
     def get_dataset_size(self, mode):
