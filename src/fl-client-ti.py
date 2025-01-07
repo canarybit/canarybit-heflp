@@ -243,6 +243,7 @@ if __name__ == '__main__':
     data_shape = (X_train.shape[1], X_train.shape[2])
 
     model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)
+    model.summary()
 
     # Define the runner
     # Here I also wrote a FakeRunner to support debugging without real training.
