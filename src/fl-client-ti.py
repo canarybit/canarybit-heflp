@@ -137,9 +137,6 @@ class LSTMRunner(TensorflowRunner):
     def test(self, model):
         print("testingxxxxxxxxxxxxxx")
 
-        X_test_with_errors = self._test_full(model)
-        X_test_with_errors.sort_values("mae", ascending=False)
-
         X_train = self.X_train.astype('float32')
         pred_train = model.predict(X_train)
         absolute_errors = np.abs(X_train - pred_train)
@@ -151,6 +148,9 @@ class LSTMRunner(TensorflowRunner):
 
         threshold=np.percentile(X_train_df.error, 99)
         print("THRESHOLD :", threshold)
+        
+        X_test_with_errors = self._test_full(model)
+        X_test_with_errors.sort_values("mae", ascending=False)
 
         X_test_reshaping['anomaly'] = X_test_reshaping['mae'] > threshold
         print("abnormal numbers", len(X_test_reshaping[(X_test_reshaping['anomaly'])]))
