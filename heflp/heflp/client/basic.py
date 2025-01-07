@@ -24,5 +24,6 @@ class BasicClient(fl.client.NumPyClient):
         unflatten_model_params(parameters[0], model)
         mae_loss, tp_rate = self.runner.test(model)
         results = (float(mae_loss), self.runner.get_dataset_size('test'), {"accuracy": tp_rate})
+        print('LOSS from the client', float(mae_loss))
 
         return results
