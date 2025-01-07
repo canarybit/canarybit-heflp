@@ -13,7 +13,7 @@ class BasicClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         model = self.model
-        print('Parameters fro  the server',parameters[0])
+        print('Parameters from the server',parameters[0])
         unflatten_model_params(parameters[0], model)
         self.runner.train(model, epochs=self.fit_epochs)
         flattened_ret = flatten_model_params(model)

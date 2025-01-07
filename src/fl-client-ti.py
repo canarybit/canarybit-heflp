@@ -38,7 +38,7 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
     print("CLIENT CID", str(int(cid/2)), cid%2)
 
     if total_n == 2:
-        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
+        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(0))
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
