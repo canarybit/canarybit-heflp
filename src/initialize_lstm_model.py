@@ -132,6 +132,7 @@ print("\nTraining data shape:", X_train.shape)
 
 input_shape = (X_train.shape[1], X_train.shape[2])
 lstm_autoencoder = create_lstm_autoencoder(input_shape, DEFAULT_MODEL_CONF)
+lstm_autoencoder.summary()
 
 initial_seq = Sequential()
 initial_seq.add(Input(shape=input_shape))
