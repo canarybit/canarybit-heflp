@@ -123,8 +123,11 @@ def save_flattened_model_params(filepath:str, model):
     np.save(filepath, flatten_model_params(model))
 
 input_file = sys.argv[1]
+
 X_train = pd.read_csv(input_file)
-print("\nTraining data shape:", X_train.shape)
+if 'Unnamed: 0' in df.columns:
+    X_train.drop(columns=['Unnamed: 0'], inplace=True)
+print("\nTraining data original shape:", X_train.shape)
 
 timesteps = timesteps_calculation(X_train, timesteps_max)
 X_train = reshaping_data(X_train, timesteps=timesteps,test=False)
