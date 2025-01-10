@@ -13,7 +13,9 @@ class BasicClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         model = self.model
-        print('Weights received from the server',parameters[0])
+        print('Weights received from the server', len(parameters[0]))
+        print('Weights shape of the model', model.get_weights().shape)
+
         unflatten_model_params(parameters[0], model)
         self.runner.train(model, epochs=self.fit_epochs)
         flattened_ret = flatten_model_params(model)
