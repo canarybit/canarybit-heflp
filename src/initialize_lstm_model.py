@@ -42,10 +42,15 @@ def unflatten_model_params(flattened_params:NDArray, model):
     elif "keras" in sys.modules and isinstance(model, keras.Model):
         unflattened_weights = []
         start = 0
+        count = 1
+        print("Shape of flattened_params:", flattened_params.shape)
+        for param in model.get_weights():
+            print("Layer shape:", count, shape)
+            count += 1
+
         for param in model.get_weights():
             shape = param.shape
             print("Model shape:", shape)
-            print("Len of flattened_params:", len(flattened_params))
             end = start + np.prod(shape)
             unflattened_weight = np.array(flattened_params[start:end]).reshape(shape).astype(np.float32)
             unflattened_weights.append(unflattened_weight)
