@@ -51,9 +51,9 @@ def unflatten_model_params(flattened_params:NDArray, model):
 
         for param in model.get_weights():
             shape = param.shape
-            print("Model shape:", shape)
             end = start + np.prod(shape)
             unflattened_weight = np.array(flattened_params[start:end]).reshape(shape).astype(np.float32)
+            print("START/END:", start, end)
             unflattened_weights.append(unflattened_weight)
             start = end
         model.set_weights(unflattened_weights)
