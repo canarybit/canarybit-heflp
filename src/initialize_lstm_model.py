@@ -44,7 +44,7 @@ def unflatten_model_params(flattened_params:NDArray, model):
         start = 0
         count = 1
 
-        print("Shape of flattened_params:", len(flattened_params))
+        # print("Shape of flattened_params:", len(flattened_params))
         for param in model.get_weights():
             print("Layer", count, "shape:", param.shape)
             count += 1
@@ -82,4 +82,4 @@ save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
 paras = np.load('lstm_init.npy')
 print("Loaded shape",paras.shape, paras[0])
 
-unflatten_model_params(paras[0], lstm_autoencoder)
+unflatten_model_params(paras, lstm_autoencoder)
