@@ -80,6 +80,6 @@ lstm_autoencoder.summary()
 
 save_flattened_model_params("lstm_init.npy", lstm_autoencoder)
 paras = np.load('lstm_init.npy')
-print("Loaded shape",paras.shape)
+print("Loaded shape",paras.shape, paras[0])
 
 unflatten_model_params(paras[0], lstm_autoencoder)
