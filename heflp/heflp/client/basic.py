@@ -13,7 +13,7 @@ class BasicClient(fl.client.NumPyClient):
 
     def fit(self, parameters, config):
         model = self.model
-        print('Weights received from the server', parameters.shape)
+        print('Weights received from the server', len(parameters))
         print('Weights shape of the model', len(model.get_weights()))
 
         unflatten_model_params(parameters[0], model)
