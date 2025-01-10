@@ -31,7 +31,9 @@ def flatten_model_params(model):
 
 def save_flattened_model_params(filepath:str, model):
     '''Save the model parameters as a 1D vector'''
-    np.save(filepath, flatten_model_params(model))
+    params = flatten_model_params(model)
+    print('Shape of the param:', len(params[0]))
+    np.save(filepath, params)
 
 input_file = sys.argv[1]
 X_train = reading_files(input_file)
