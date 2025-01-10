@@ -125,7 +125,7 @@ def save_flattened_model_params(filepath:str, model):
 input_file = sys.argv[1]
 
 X_train = pd.read_csv(input_file)
-if 'Unnamed: 0' in df.columns:
+if 'Unnamed: 0' in X_train.columns:
     X_train.drop(columns=['Unnamed: 0'], inplace=True)
 print("\nTraining data original shape:", X_train.shape)
 
