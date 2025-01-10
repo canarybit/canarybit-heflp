@@ -240,10 +240,9 @@ if __name__ == '__main__':
 
     # Load the training data
     X_train, X_test, X_test_reshaping, cols = load_data(cid, total_n)
-    data_shape = (X_train.shape[1], X_train.shape[2])
 
-    model = create_lstm_autoencoder(data_shape, DEFAULT_MODEL_CONF)
-    model.summary()
+    lstm_autoencoder = create_autoencoder(X_train.shape, DEFAULT_MODEL_CONF)
+    lstm_autoencoder.summary()
 
     # Define the runner
     # Here I also wrote a FakeRunner to support debugging without real training.
