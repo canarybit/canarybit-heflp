@@ -133,34 +133,35 @@ timesteps = timesteps_calculation(X_train, timesteps_max)
 X_train = reshaping_data(X_train, timesteps=timesteps,test=False)
 print("\nTraining data shape:", X_train.shape)
 
-input_shape = (X_train.shape[1], X_train.shape[2])
+# input_shape = (X_train.shape[1], X_train.shape[2])
 # lstm_autoencoder = create_lstm_autoencoder(input_shape, DEFAULT_MODEL_CONF)
 # lstm_autoencoder.summary()
 
-initial_seq = Sequential()
-initial_seq.add(Input(shape=input_shape))
-initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
-input_seq = initial_seq.inputs
-x = initial_seq.outputs
+# initial_seq = Sequential()
+# initial_seq.add(Input(shape=input_shape))
+# initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
+# input_seq = initial_seq.inputs
+# x = initial_seq.outputs
 
-lstm_autoencoder_conf = DEFAULT_MODEL_CONF["lstm-autoencoder"]
+# lstm_autoencoder_conf = DEFAULT_MODEL_CONF["lstm-autoencoder"]
 
-encoder_conf = lstm_autoencoder_conf["encoder"]
+# encoder_conf = lstm_autoencoder_conf["encoder"]
 
-# Encoder
-for i in range(encoder_conf["n-layers"]):
-    layer = encoder_conf[str(i)]
-    x = add_layer(layer, x, X_train.shape if layer["type"] in ["repeat-vector", "time-distributed"] else None)
+# # Encoder
+# for i in range(encoder_conf["n-layers"]):
+#     layer = encoder_conf[str(i)]
+#     x = add_layer(layer, x, X_train.shape if layer["type"] in ["repeat-vector", "time-distributed"] else None)
 
-# Decoder
-decoder_conf = lstm_autoencoder_conf["decoder"]
+# # Decoder
+# decoder_conf = lstm_autoencoder_conf["decoder"]
 
-for j in range(decoder_conf["n-layers"]):
-    layer = decoder_conf[str(j)]
-    x = add_layer(layer, x, X_train.shape if layer["type"] in ["time-distributed"] else None)
+# for j in range(decoder_conf["n-layers"]):
+#     layer = decoder_conf[str(j)]
+#     x = add_layer(layer, x, X_train.shape if layer["type"] in ["time-distributed"] else None)
 
-output = TimeDistributed(Dense(input_shape[-1], activation="sigmoid"))(x)
-lstm_autoencoder = Model(inputs=input_seq, outputs=output)
+# output = TimeDistributed(Dense(input_shape[-1], activation="sigmoid"))(x)
+# lstm_autoencoder = Model(inputs=input_seq, outputs=output)
+lstm_autoencoder = create_autoencoder(X_train.shape, DEFAULT_MODEL_CONF)
 lstm_autoencoder.summary()
 
 

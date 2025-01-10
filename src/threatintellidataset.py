@@ -19,6 +19,14 @@ import re
 import os
 import numpy as np
 from numpy.typing import NDArray
+from models import FCN
+import numpy as np
+# from heflp.training.params import save_flattened_model_params
+from threatintellidataset import *
+
+import sys
+import pandas as pd
+timesteps_max = 10
 
 
 # LSTM Autoencoder model configuration
@@ -152,6 +160,65 @@ def data_generator(input_data:NDArray, batch_size:int, timesteps:int, n_batches:
             print(current_batch.shape)
 
             yield current_batch, current_batch
+
+def add_layer(layer_conf, x_input, X_train_shape=None):
+    
+    init_scheme = layer_conf.get("init", "glorot_uniform") # Default to 'glorot_uniform'
+
+    if layer_conf["type"] == "lstm":
+        return LSTM(units=layer_conf["size"], activation=layer_conf["activation"],
+                    return_sequences=layer_conf["return-sequences"],
+                    kernel_initializer=initializers.get(init_scheme),
+                    recurrent_dropout=layer_conf.get("recurrent-dropout", 0))(x_input) 
+
+    elif layer_conf["type"] == "dense":
+        return Dense(units=layer_conf["size"], activation=layer_conf["activation"],
+                     kernel_initializer=initializers.get(layer_conf["init"]))(x_input)
+
+    elif layer_conf["type"] == "dropout":
+        return Dropout(rate=layer_conf["rate"])(x_input)
+    elif layer_conf["type"] == "repeat-vector":
+        return RepeatVector(X_train_shape[1])(x_input)
+    elif layer_conf["type"] == "bidirectional":
+        return Bidirectional(LSTM(units=layer_conf["size"], activation=layer_conf["activation"],
+                                  return_sequences=layer_conf["return-sequences"],
+                                  recurrent_dropout=layer_conf["recurrent-dropout"],
+                                  kernel_initializer=initializers.get(init_scheme)))(x_input)
+
+    elif layer_conf["type"] == "time-distributed":
+        return TimeDistributed(Dense(X_train_shape[2], activation="sigmoid",
+                                     kernel_initializer=initializers.get(init_scheme)))(x_input)
+
+
+def create_autoencoder(x_train_shape:Tuple[int, int,int], model_conf:dir):
+    
+    input_shape = (x_train_shape[1], x_train_shape[2])
+    initial_seq = Sequential()
+    initial_seq.add(Input(shape=input_shape))
+    initial_seq.add(Masking(mask_value=-1)) # Must match padding_value 
+    input_seq = initial_seq.inputs
+    x = initial_seq.outputs
+
+    lstm_autoencoder_conf = model_conf["lstm-autoencoder"]
+
+    encoder_conf = lstm_autoencoder_conf["encoder"]
+
+    # Encoder
+    for i in range(encoder_conf["n-layers"]):
+        layer = encoder_conf[str(i)]
+        x = add_layer(layer, x, x_train_shape if layer["type"] in ["repeat-vector", "time-distributed"] else None)
+
+    # Decoder
+    decoder_conf = lstm_autoencoder_conf["decoder"]
+
+    for j in range(decoder_conf["n-layers"]):
+        layer = decoder_conf[str(j)]
+        x = add_layer(layer, x, x_train_shape if layer["type"] in ["time-distributed"] else None)
+
+    output = TimeDistributed(Dense(input_shape[-1], activation="sigmoid"))(x)
+    lstm_autoencoder = Model(inputs=input_seq, outputs=output)
+    return lstm_autoencoder
+
 
 def create_lstm_autoencoder(shape:Tuple[int,int], model_conf:dir):
     
