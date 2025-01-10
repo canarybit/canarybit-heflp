@@ -2,6 +2,7 @@ from models import FCN
 import numpy as np
 # from heflp.training.params import save_flattened_model_params
 from threatintellidataset import *
+from heflp.training.params import flatten_model_params, unflatten_model_params
 
 import sys
 import pandas as pd
@@ -19,15 +20,15 @@ def timesteps_calculation(df, timesteps_max):
 
     return timesteps
 
-def flatten_model_params(model):
-    '''Flatten the model into a 1D Numpy array (Vector)'''
-    if "keras" in sys.modules and isinstance(model,Model):
-        params = np.concatenate(
-            [param.flatten() for param in model.get_weights()]
-        )
-    else:
-        raise ValueError("Invalid model type. Expecting PyTorch or Keras model.")
-    return params
+# def flatten_model_params(model):
+#     '''Flatten the model into a 1D Numpy array (Vector)'''
+#     if "keras" in sys.modules and isinstance(model,Model):
+#         params = np.concatenate(
+#             [param.flatten() for param in model.get_weights()]
+#         )
+#     else:
+#         raise ValueError("Invalid model type. Expecting PyTorch or Keras model.")
+#     return params
 
 def save_flattened_model_params(filepath:str, model):
     '''Save the model parameters as a 1D vector'''
