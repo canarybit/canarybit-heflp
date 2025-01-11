@@ -15,7 +15,7 @@ class BasicClient(fl.client.NumPyClient):
         model = self.model
         print('Paras shape received from the server:', len(parameters))
 
-        unflatten_model_params(parameters, model)
+        unflatten_model_params(parameters[0], model)
         self.runner.train(model, epochs=self.fit_epochs)
         flattened_ret = flatten_model_params(model)
         print('Weights sent to server', flattened_ret)
