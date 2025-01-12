@@ -228,7 +228,7 @@ if __name__ == '__main__':
     total_n = args.total_num_clients
     server_addr = args.address
     epochs_per_round = args.epochs_per_round
-    batch_size = batch_size
+    batch_size = args.batch_size
 
     # Log the parameters
     meta = {
