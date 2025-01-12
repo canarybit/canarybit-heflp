@@ -216,6 +216,7 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--cid", default=0, type=int, help='Client id, default=0')
     parser.add_argument("-n", "--total_num_clients", default=2, type=int, help='Total number of clients, default 2')
     parser.add_argument("-e", "--epochs_per_round", type=int, default=5, help='Epochs for each round, default 5')
+    parser.add_argument("-b", "--batch_size", type=int, default=700, help='Batch size')
     parser.add_argument("-a", "--address", type=str, default="127.0.0.1:8080", help='Server address address:port')
     parser.add_argument("--ca", type=str, default=".tmp/certificates/ca.crt", help='CA certificate file')
     parser.add_argument("-C", "--comment", type=str, default="", help='Comment for this process, will be added to the meta data and log')
@@ -227,6 +228,7 @@ if __name__ == '__main__':
     total_n = args.total_num_clients
     server_addr = args.address
     epochs_per_round = args.epochs_per_round
+    batch_size = batch_size
 
     # Log the parameters
     meta = {
@@ -250,7 +252,7 @@ if __name__ == '__main__':
     if if_training:
         '''If standard training'''
         optimizer = keras.optimizers.Adam(learning_rate=0.001)
-        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, 400)
+        runner = LSTMRunner(X_train, X_test, X_test_reshaping, cols, 'mse', optimizer, batch_size)
     else:
         '''If test only:'''
         train_gen = static_weight_generator(1000)
