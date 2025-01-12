@@ -46,7 +46,7 @@ class TensorflowRunner(Runner):
             raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
     def train(self, model: keras.Model, epochs: int = 1):
-        print("tsTrainingxxxxxxxxxxxxxx")
+        print("steps_per_epoch:", len(X_train)//self.batch_size)
         self._compile_model(model)
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
