@@ -51,7 +51,7 @@ class TensorflowRunner(Runner):
 
         early_stopping = EarlyStopping(monitor='loss', patience=10, verbose=1, restore_best_weights=True,
                                    min_delta=0.001, mode='min')
-        model.fit(x=self.train_gen, steps_per_epoch=self.batch_size, epochs=epochs,callbacks=[early_stopping])
+        model.fit(x=self.train_gen, steps_per_epoch= len(X_train)//self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
         X_train = self.X_train.astype('float32')
         pred_train = model.predict(X_train)
