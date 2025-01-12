@@ -47,6 +47,8 @@ class TensorflowRunner(Runner):
 
     def train(self, model: keras.Model, epochs: int = 1):
         print("Trining start:")
+        X_train = self.X_train.astype('float32')
+
         print("Train size:", len(X_train),"Batch size:", self.batch_size, "Per epoch:", len(X_train)//self.batch_size)
         self._compile_model(model)
 
@@ -54,7 +56,6 @@ class TensorflowRunner(Runner):
                                    min_delta=0.001, mode='min')
         model.fit(x=self.train_gen, steps_per_epoch= len(X_train)//self.batch_size, epochs=epochs,callbacks=[early_stopping])
 
-        X_train = self.X_train.astype('float32')
         pred_train = model.predict(X_train)
         absolute_errors = np.abs(X_train - pred_train)
         mask = (X_train != -1.0).astype(np.float32)
