@@ -180,7 +180,9 @@ class LSTMRunner(TensorflowRunner):
         print("TPrate: ", TPrate, "TNrate: ", TNrate)
         print("FNrate: ", FNrate, "FPrate: ", FPrate)
 
-        return mae.mean(), threshold
+        loss = model.evaluate(X_train, X_train, verbose=0)
+
+        return loss, threshold
 
     # def train(self, model: keras.Model, epochs: int = 1):
     #     print("Client training")

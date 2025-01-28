@@ -2,6 +2,7 @@ from typing import Generator
 from .base import Runner, RunnerException
 from heflp.utils import logger
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras import backend as K
 import numpy as np
 import pandas as pd
 
@@ -33,6 +34,25 @@ class TensorflowRunner(Runner):
         self.optimizer = optimizer
         self.metric = metric # Only support one metric now
 
+    def custom_binary_crossentropy(y_true, y_pred):
+    
+        """
+        Custom binary crossentropy loss function that applies a mask to ignore certain target values.
+        
+        Args:
+            y_true (Tensor): Ground truth binary labels.
+            y_pred (Tensor): Predicted probabilities.
+        
+        Returns:
+            Tensor: The mean binary crossentropy loss, excluding masked values (those where y_true is -1).
+        """
+        
+        mask = K.cast(K.not_equal(y_true, -1), K.floatx())
+        y_true = K.cast(y_true, K.floatx())  
+        loss = K.binary_crossentropy(y_true, y_pred) * mask
+        return K.sum(loss) / K.sum(mask)
+
+
     def _compile_model(self, model: keras.Model, force: bool=False):
         '''
         Compile the model, if force==False, only compile when the model is not compiled yet.
@@ -41,7 +61,7 @@ class TensorflowRunner(Runner):
         try:
             if model._is_compiled and not force:
                 return
-            model.compile(optimizer=self.optimizer, loss=self.criterion, metrics=[self.metric])
+            model.compile(optimizer=self.optimizer, loss=self.custom_binary_crossentropy, metrics=[self.metric])
         except Exception as e:
             raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
