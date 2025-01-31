@@ -32,17 +32,16 @@ from tensorflow.keras.callbacks import EarlyStopping
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Load the training and evaluation data
-def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
+def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/10-17" 
     print("CLIENT CID", str(int(cid/2)), cid%2)
-
+       
     if total_n == 2:
         input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-        cols = list(X_test.columns) 
 
     if total_n > 4:
         folder_num = 0 if cid == 0 else 1
@@ -50,7 +49,6 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-        cols = list(X_test.columns) 
 
         if cid!=0:
             try:
@@ -68,7 +66,6 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
-        cols = list(X_test.columns) 
 
         try:
             train_split = split_into_two(X_train)
@@ -79,6 +76,12 @@ def load_data(cid:int=0, total_n: int=2, timesteps:int=10):
             print("Split data failed!")
             exit()
 
+    if if_same_data:
+        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, '0')
+        X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
+        X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
+        
+    cols = list(X_test.columns) 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
     X_test_reshaping = reshaping_data(X_test, timesteps=timesteps, test=True)
 
@@ -222,6 +225,7 @@ if __name__ == '__main__':
     parser.add_argument("-a", "--address", type=str, default="127.0.0.1:8080", help='Server address address:port')
     parser.add_argument("--ca", type=str, default=".tmp/certificates/ca.crt", help='CA certificate file')
     parser.add_argument("-C", "--comment", type=str, default="", help='Comment for this process, will be added to the meta data and log')
+    parser.add_argument("-s", "--if_same_data", action="store_true", help="Flag for if all clients should use the same data(from folder 0 by default)")
     args = parser.parse_args()
 
     # Extract the parameters
@@ -231,6 +235,7 @@ if __name__ == '__main__':
     server_addr = args.address
     epochs_per_round = args.epochs_per_round
     batch_size = args.batch_size
+    if_same_data = args.if_same_data
 
     # Log the parameters
     meta = {
@@ -243,7 +248,7 @@ if __name__ == '__main__':
     LOGGER.info(f"Meta | {meta}")
 
     # Load the training data
-    X_train, X_test, X_test_reshaping, cols = load_data(cid, total_n)
+    X_train, X_test, X_test_reshaping, cols = load_data(cid, total_n, if_same_data)
 
     model = create_autoencoder(X_train.shape, DEFAULT_MODEL_CONF)
     model.summary()
