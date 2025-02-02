@@ -38,7 +38,11 @@ def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=
     print("CLIENT CID", str(int(cid/2)), cid%2)
        
     if total_n == 2:
-        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
+
+        if if_same_data:
+            input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, '0')
+        else:
+            input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
 
         X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
         X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
@@ -75,11 +79,6 @@ def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=
         except:
             print("Split data failed!")
             exit()
-
-    if if_same_data:
-        input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, '0')
-        X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
-        X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
         
     cols = list(X_test.columns) 
     X_train = reshaping_data(X_train, timesteps=timesteps, test=False)
