@@ -35,7 +35,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=10):
 
     data_directory = "canarybit-heflp/data/10-17" 
-    print("CLIENT CID", str(int(cid/2)), cid%2)
+    print("CLIENT CID", str(int(cid/2)), cid%2, if_same_data)
        
     if total_n == 2:
 
@@ -48,6 +48,7 @@ def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=
             X_train = train_split[cid%2]
             test_split = split_into_two(X_test)
             X_test = test_split[cid%2]
+
         else:
             input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
             X_train = reading_files(os.path.join(input_data_folder_path,"X_train.csv"))
