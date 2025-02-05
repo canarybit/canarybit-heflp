@@ -45,9 +45,9 @@ def load_data(cid:int=0, total_n: int=2, if_same_data: bool=True, timesteps:int=
             X_test = reading_files(os.path.join(input_data_folder_path,"X_test.csv"))
 
             train_split = split_into_two(X_train)
-            X_train = train_split[cid%2]
+            X_train = train_split[cid]
             test_split = split_into_two(X_test)
-            X_test = test_split[cid%2]
+            X_test = test_split[cid]
 
         else:
             input_data_folder_path=os.path.join(os.path.dirname(os.getcwd()), data_directory, str(cid))
@@ -189,9 +189,9 @@ class LSTMRunner(TensorflowRunner):
         print("TPrate: ", TPrate, "TNrate: ", TNrate)
         print("FNrate: ", FNrate, "FPrate: ", FPrate)
 
-        loss = model.evaluate(X_train, X_train, verbose=0)
+        self_loss = model.evaluate(X_train, X_train, verbose=0)
 
-        return loss, threshold
+        return self_loss, threshold
 
     # def train(self, model: keras.Model, epochs: int = 1):
     #     print("Client training")
