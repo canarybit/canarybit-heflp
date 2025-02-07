@@ -64,7 +64,7 @@ class TensorflowRunner(Runner):
         try:
             if model._is_compiled and not force:
                 return
-            model.compile(optimizer=self.optimizer, loss=self.custom_binary_crossentropy, metrics=[self.metric])
+            model.compile(optimizer=self.optimizer, loss=self.criterion, metrics=[self.metric])
         except Exception as e:
             raise RunnerException(f"Failed to compile the model: {e.args[0]}")
 
