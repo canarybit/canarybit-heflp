@@ -1,7 +1,6 @@
 from typing import Generator
 from .base import Runner, RunnerException
 from heflp.utils import logger
-import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import backend as K
 import numpy as np
@@ -35,7 +34,7 @@ class TensorflowRunner(Runner):
         self.optimizer = optimizer
         self.metric = metric # Only support one metric now
 
-    def custom_binary_crossentropy(y_true, y_pred, from_logits=False):
+    def custom_binary_crossentropy(y_true, y_pred):
     
         """
         Custom binary crossentropy loss function that applies a mask to ignore certain target values.
@@ -47,9 +46,7 @@ class TensorflowRunner(Runner):
         Returns:
             Tensor: The mean binary crossentropy loss, excluding masked values (those where y_true is -1).
         """
-        # If y_pred is logits, apply softmax to get probabilities
-        if from_logits:
-            y_pred = tf.nn.softmax(y_pred)
+        
         mask = K.cast(K.not_equal(y_true, -1), K.floatx())
         y_true = K.cast(y_true, K.floatx())  
         loss = K.binary_crossentropy(y_true, y_pred) * mask
