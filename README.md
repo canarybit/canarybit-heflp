@@ -22,10 +22,6 @@ and two ML frameworks:
 1. [Pytorch](https://pytorch.org/)
 2. [Tensorflow](https://github.com/tensorflow/tensorflow)
 
-## System Overview
-
-![system overview of Heflp](./materials/sys_overview.png)
-
 ## Project Structure
 
 ```
